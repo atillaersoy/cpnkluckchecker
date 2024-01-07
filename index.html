@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<title>CPNK Luck Checker by Ati</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #logo {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            width: 20%;
+        }
+
+        #welcomeText {
+            position: absolute;
+            top: 30%;
+            text-align: center;
+            z-index: 2;
+            width: 100%;
+        }
+
+        #randomImageBtn {
+            background-color: purple;
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        #randomImageBtn:hover {
+            background-color: #6b1e8a;
+        }
+
+        #twitterShareBtn {
+            display: none;
+            background-color: #1da1f2;
+            color: white;
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 20px;
+            margin-left: 10px;
+            position: relative;
+            z-index: 2;
+        }
+
+        #twitterShareBtn:hover {
+            background-color: #007bb5;
+        }
+
+        .raindrop-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .raindrop {
+            position: absolute;
+            width: 2px;
+            height: 10px;
+            background-color: purple;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        #randomImage {
+            display: none;
+            position: absolute;
+            max-width: 100%;
+            max-height: 100%;
+            width: 576px;
+            height: 576px;
+            margin-top: 5%;
+            image-rendering: pixelated;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        #lightning::before,
+        #lightning::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, white, transparent);
+            opacity: 0;
+        }
+
+        #lightning::before {
+            left: 25%;
+        }
+
+        #lightning::after {
+            left: 75%;
+        }
+
+        #lightning.active::before,
+        #lightning.active::after {
+            opacity: 1;
+            animation: lightning 0.5s ease-out;
+        }
+
+        @keyframes lightning {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img id="logo" src="cybord.png" alt="Cyborg Logo">
+    <div id="welcomeText">
+        <h1>Welcome to CybordPunks Luck Checker!</h1> 
+			<p>Click the GIB CPNK button to see your luck. Search your photo on ordinals to see if you got lucky. :)</p>
+    </div>
+    <div class="raindrop-container"></div>
+    <button id="randomImageBtn" onclick="fetchRandomImage()">GIB CPNK</button>
+    <button id="twitterShareBtn" onclick="shareOnTwitter()">Share on Twitter</button>
+    <div id="lightning"></div>
+    <img id="randomImage" alt="Random Image">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const numberOfDrops = 100;
+            const raindropContainer = document.querySelector('.raindrop-container');
+
+            for (let i = 0; i < numberOfDrops; i++) {
+                createRaindrop();
+            }
+
+            function createRaindrop() {
+                const raindrop = document.createElement('div');
+                raindrop.className = 'raindrop';
+                raindrop.style.left = `${Math.random() * 100}vw`;
+                raindrop.style.animationDuration = `${Math.random() * 2 + 1}s`;
+
+                raindropContainer.appendChild(raindrop);
+            }
+        });
+
+        function fetchRandomImage() {
+            const lightning = document.getElementById('lightning');
+            lightning.classList.add('active');
+            setTimeout(() => {
+                lightning.classList.remove('active');
+            }, 500);
+
+            const minIndex = 0;
+            const maxIndex = 499;
+            const randomIndex = Math.floor(Math.random() * (maxIndex - minIndex + 1)) + minIndex;
+            const imageUrl = `https://ordin-delta.vercel.app/content/75f7d1a1a322b8cc87ce3b044775e666a08fc2f07a6bdc90b9b344f8c162be30i${randomIndex}`;
+
+            const randomImage = document.getElementById('randomImage');
+            randomImage.src = imageUrl;
+            randomImage.style.display = 'block';
+
+            const button = document.getElementById('randomImageBtn');
+            button.style.marginTop = `${randomImage.clientHeight + 30}px`;
+
+            const twitterShareBtn = document.getElementById('twitterShareBtn');
+            twitterShareBtn.style.marginTop = `${randomImage.clientHeight + 30}px`;
+            twitterShareBtn.style.display = 'inline-block';
+
+            const welcomeText = document.getElementById('welcomeText');
+            welcomeText.style.display = 'none';
+
+            const raindrops = document.querySelectorAll('.raindrop');
+            raindrops.forEach(raindrop => {
+                const animationDuration = Math.random() * 1.5 + 0.5;
+                raindrop.style.animation = `fall linear infinite ${animationDuration}s`;
+            });
+        }
+
+        function shareOnTwitter() {
+            const text = encodeURIComponent("I checked my luck on #CPNK, I was lucky to get @CybordPunks below, Check yours on https://cpnkluckchecker.github.io !");
+            const imageUrl = encodeURIComponent(document.getElementById('randomImage').src);
+            const twitterShareUrl = `https://twitter.com/intent/tweet?text=${text}&url=${imageUrl}`;
+
+            window.open(twitterShareUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
